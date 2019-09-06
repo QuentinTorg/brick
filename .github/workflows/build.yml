@@ -1,0 +1,17 @@
+name: Build
+on: push
+jobs:
+
+  build:
+    name: Build
+    container: wdouglass/build-image
+    runs-on: ubuntu-latest
+    steps:
+    - name: create build configuration
+      run: mkdir build && cd build && cmake -DCPACK_PACKAGE_VERSION=${GITHUB_SHA} ..
+    - name: build
+      run: make -C build
+    - name: test
+      run: make -C build test
+    - name: package
+      run: cd build && cpack -G TBZ2
